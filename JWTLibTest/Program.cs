@@ -22,7 +22,7 @@ namespace JWTLibTest
 
             string kid = client.PrivatePKWS.keys.LastOrDefault().Kid;
 
-            string jwt = JWTClient.GenerateJWT("CHBase", "PHR", jwksPrivate, kid, new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
+            string jwt = JWTClient.GenerateJWT("audience", "issuer", jwksPrivate, kid, new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
 
             IPrincipal principal = JWTServer.ValidateToken(jwt, jwksPublic, kid);
 
@@ -37,8 +37,8 @@ namespace JWTLibTest
 
             MyJWK jwk = Utility.FindRandomPrivateJWKFromJWKS(jwksPrivate);
 
-            string jwt = JWTClient.GenerateJWT("CHBase", 
-                "PHR", 
+            string jwt = JWTClient.GenerateJWT("audience", 
+                "issuer", 
                 jwksPrivate, 
                 jwk.Kid, 
                 new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
@@ -59,8 +59,8 @@ namespace JWTLibTest
 
             MyJWK jwk = Utility.FindRandomPrivateJWKFromJWKS(jwksPrivate);
 
-            string jwt = JWTClient.GenerateJWT("CHBase",
-                "PHR",
+            string jwt = JWTClient.GenerateJWT("audience",
+                "issuer",
                 jwksPrivate,
                 jwk.Kid,
                 new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
