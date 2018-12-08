@@ -4,7 +4,7 @@ Library and test tools to publish and validate JWK
 
 ## USAGE - CLIENT
 
->create two JWKs(JSON Web Key) and generate JSON to publish
+>Create two JWKs(JSON Web Key) and generate JSON to publish
 
 ```c#
 JWTClient client = new JWTClient(2);
@@ -22,7 +22,7 @@ string jwksPublic = client.PublicJWKS.ToJSON();
 string jwksPrivate = client.PrivatePKWS.ToJSON();
 ```
 
->get a kid to generate a JWT token signed by JWK
+>Get a kid to generate a JWT token signed by JWK
 
 ```c#
 string jwksPrivate = File.ReadAllText(@"[File_Path]\RS384.private.json");
@@ -43,7 +43,7 @@ string jwt = JWTClient.GenerateJWT("audience", "issuer", jwksPrivate, kid, new L
 string jwksPublic = JWTServer.GetJWKSFromJKU("https://[HOST]/RS384.public.json");
 ```
 
->validate client JWT using the public key
+>Validate client JWT using the public key
 
 ```c#
 JwtSecurityToken token = new JwtSecurityToken(jwt);
