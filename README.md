@@ -4,7 +4,7 @@ Library and test tools to publish and validate JWK
 
 ## USAGE - CLIENT
 
->Create two JWKs(JSON Web Key) and generate JSON to publish
+>Create two JWKs (JSON Web Key) using RSA Crypto Provider and generate JSON to publish
 
 ```c#
 JWTClient client = new JWTClient(2);
