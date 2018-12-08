@@ -28,7 +28,7 @@ string jwksPrivate = client.PrivatePKWS.ToJSON();
 string jwksPrivate = File.ReadAllText(@"[File_Path]\RS384.private.json");
 MyJWK jwk = Utility.FindRandomPrivateJWKFromJWKS(jwksPrivate);
 string kid = jwk.Kid;
-string jku = string.empty;//JWKS URL if present (e.g. "https://[HOST]/RS384.public.json")
+string jku = string.Empty;//JWKS URL if present (e.g. "https://[HOST]/RS384.public.json")
 string jwt = JWTClient.GenerateJWT("audience", "issuer", jku, jwksPrivate, kid, new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
 ```
 
