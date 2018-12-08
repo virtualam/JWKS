@@ -40,7 +40,7 @@ namespace JWTLib
             PrivatePKWS = new MyJWKS(listKeysPrivate);
         }
 
-        public static string GenerateJWT(string audience, string issuer, string privateJKWSJSON, string kid, List<Claim> additionalClaims)
+        public static string GenerateJWT(string audience, string issuer, string jku, string privateJKWSJSON, string kid, List<Claim> additionalClaims)
         {
             string jwt = null;
             string jwks = Utility.FindJWKFromJWKS(false, privateJKWSJSON, kid);
@@ -68,6 +68,10 @@ namespace JWTLib
 
                 var header = new JwtHeader(signingCredentials);
                 header.Add("kid", privateJWK.Kid);
+                if (!string.IsNullOrEmpty(jku))
+                {
+                    header.Add("jku", jku);
+                }
 
                 var now = DateTime.UtcNow;
                 List<Claim> claims = new List<Claim>();

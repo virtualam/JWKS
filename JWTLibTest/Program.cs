@@ -22,7 +22,7 @@ namespace JWTLibTest
 
             string kid = client.PrivatePKWS.keys.LastOrDefault().Kid;
 
-            string jwt = JWTClient.GenerateJWT("audience", "issuer", jwksPrivate, kid, new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
+            string jwt = JWTClient.GenerateJWT("audience", "issuer", string.Empty, jwksPrivate, kid, new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
 
             IPrincipal principal = JWTServer.ValidateToken(jwt, jwksPublic, kid);
 
@@ -37,10 +37,11 @@ namespace JWTLibTest
 
             MyJWK jwk = Utility.FindRandomPrivateJWKFromJWKS(jwksPrivate);
 
-            string jwt = JWTClient.GenerateJWT("audience", 
-                "issuer", 
-                jwksPrivate, 
-                jwk.Kid, 
+            string jwt = JWTClient.GenerateJWT("audience",
+                "issuer",
+                string.Empty,
+                jwksPrivate,
+                jwk.Kid,
                 new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
 
             JwtSecurityToken token = new JwtSecurityToken(jwt);
@@ -55,20 +56,25 @@ namespace JWTLibTest
         static void TestURLBased()
         {
             string jwksPrivate = File.ReadAllText(@"c:\projects\JWTLib\JWTLibTest\RS384.private.json");
-            string jwksPublic = JWTServer.GetJWKSFromJKU("http://jwks.arundev.inetxperts.net/RS384.public.json");
 
             MyJWK jwk = Utility.FindRandomPrivateJWKFromJWKS(jwksPrivate);
 
             string jwt = JWTClient.GenerateJWT("audience",
                 "issuer",
+                "http://jwks.arundev.inetxperts.net/RS384.public.json",
                 jwksPrivate,
                 jwk.Kid,
                 new List<System.Security.Claims.Claim>() { new Claim("custom", Guid.NewGuid().ToString()) });
 
             JwtSecurityToken token = new JwtSecurityToken(jwt);
 
-            if (token != null && token.Header.ContainsKey("kid"))
+
+            if (token != null
+                && token.Header.ContainsKey("kid")
+                && token.Header.ContainsKey("jku"))
             {
+                string jwksPublic = JWTServer.GetJWKSFromJKU(token.Header["jku"].ToString());
+
                 string kid = token.Header["kid"].ToString();
                 IPrincipal principal = JWTServer.ValidateToken(jwt, jwksPublic, kid);
             }
