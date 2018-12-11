@@ -24,7 +24,7 @@ namespace JWTLib
             return jkws;
         }
 
-        public static IPrincipal ValidateToken(string jwt, string jwksJSON, string kid)
+        public static IPrincipal ValidateTokenRSA(string jwt, string jwksJSON, string kid)
         {
             IPrincipal principal = null;
             string jwk = Utility.FindJWKFromJWKS(true, jwksJSON, kid);
@@ -49,6 +49,23 @@ namespace JWTLib
                 SecurityToken validatedToken;
                 principal = handler.ValidateToken(jwt, validationParameters, out validatedToken);
             }
+
+            return principal;
+        }
+
+        public static IPrincipal ValidateToken(string jwt, string jwksJSON, string kid)
+        {
+            IPrincipal principal = null;
+            string strjwk = Utility.FindJWKFromJWKS(true, jwksJSON, kid);
+            MyJWK publicJWK = MyJWK.Parse(strjwk);
+            JsonWebKey jwk = new JsonWebKey(strjwk);
+
+            var validationParameters = getValidationParameters(jwk);
+
+            var handler = new JwtSecurityTokenHandler();
+            
+            SecurityToken validatedToken;
+            principal = handler.ValidateToken(jwt, validationParameters, out validatedToken);
 
             return principal;
         }
