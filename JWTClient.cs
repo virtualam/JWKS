@@ -169,7 +169,7 @@ namespace JWTLib
             return jwt;
         }
 
-        public static string GenerateJWTX509(X509Certificate2 cert, string audience, string issuer, string jku, string privateJKWSJSON, string kid, List<Claim> additionalClaims)
+        public static string GenerateJWTX509(string audience, string issuer, string jku, string privateJKWSJSON, string kid, List<Claim> additionalClaims)
         {
             string jwt = null;
             string jwks = Utility.FindJWKFromJWKS(false, privateJKWSJSON, kid);

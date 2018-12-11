@@ -53,7 +53,7 @@ namespace JWTLibTest
             string jwksPrivate1 = clientX509.PrivatePKWS.ToJSON();
             string kid1 = clientX509.PrivatePKWS.keys.LastOrDefault().Kid;
 
-            string jwt1 = JWTClient.GenerateJWTX509(privateKey,
+            string jwt1 = JWTClient.GenerateJWTX509(
                "audience",
                "issuer",
                string.Empty,
