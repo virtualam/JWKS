@@ -21,16 +21,24 @@ namespace JWTWithPEM
             string publicKey = File.ReadAllText($"{certFolder}\\nhslogin_pb.pem");
             string privateKey = File.ReadAllText($"{certFolder}\\nhslogin_pv.pem");
 
-            var claims = new List<Claim>();
-            claims.Add(new Claim("claim1", "value1"));
-            claims.Add(new Claim("claim2", "value2"));
-            claims.Add(new Claim("claim3", "value3"));
+            var payload = new Dictionary<string, object>()
+            {
+                { "sub", "mr.x@contoso.com" },
+                { "exp", 1300819380 }
+            };
 
-            var token = CreateToken(claims, privateKey);
-            var payload = DecodeToken(token, publicKey);
+            var headers = new Dictionary<string, object>()
+            {
+                 { "typ", "JWT" },
+                 { "cty", "JWT" },
+                 { "keyid", "111-222-333"}
+            };
+
+            var tokenJWT = CreateToken(payload, headers, privateKey);
+            var decodedPayload = DecodeToken(tokenJWT, publicKey);
         }
 
-        public static string CreateToken(List<Claim> claims, string privateRsaKey)
+        public static string CreateToken(Dictionary<string, object> payload, Dictionary<string, object> headers, string privateRsaKey)
         {
             RSAParameters rsaParams;
             using (var tr = new StringReader(privateRsaKey))
@@ -44,11 +52,13 @@ namespace JWTWithPEM
                 var privateRsaParams = keyPair.Private as RsaPrivateCrtKeyParameters;
                 rsaParams = DotNetUtilities.ToRSAParameters(privateRsaParams);
             }
+
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
                 rsa.ImportParameters(rsaParams);
-                Dictionary<string, object> payload = claims.ToDictionary(k => k.Type, v => (object)v.Value);
-                return Jose.JWT.Encode(payload, rsa, Jose.JwsAlgorithm.RS256);
+                //Dictionary<string, object> payload = claims.ToDictionary(k => k.Type, v => (object)v.Value);
+
+                return Jose.JWT.Encode(payload, rsa, Jose.JwsAlgorithm.RS256, headers);
             }
         }
 
