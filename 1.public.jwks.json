@@ -1,5 +1,4 @@
 {
-  "additionalData": {},
   "keys": [
     {
       "additionalData": {},
@@ -19,6 +18,5 @@
         "signatureProviderObjectPoolCacheSize": 32
       }
     }
-  ],
-  "skipUnresolvedJsonWebKeys": true
+  ]
 }
